@@ -9,7 +9,7 @@ packages = ["jq", "unzipNLS", "chromium", "try", "gh"]
 [deployment]
 deploymentTarget = "autoscale"
 build = ["sh", "-c", "bash -lc ' set -e # instala deps no root (com fallback se não houver lockfile) if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then   npm ci --include=dev else   npm install --include=dev fi  # build do TeleMedMerge (root) npm run build || (vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist) '"]
-run = ["sh", "-c", "bash -lc 'node production.js'"]
+run = ["npm", "run", "start"]
 
 [[ports]]
 localPort = 5000
@@ -64,20 +64,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start application"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "TeleMed Frontend"
-
-[[workflows.workflow]]
-name = "Start application"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
-waitForPort = 5000
 
 [[workflows.workflow]]
 name = "TeleMed Frontend"
